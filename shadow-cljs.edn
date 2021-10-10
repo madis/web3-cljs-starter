@@ -1,0 +1,28 @@
+{:source-paths
+ ["src"]
+
+ :dev-http {6500 {:root "public" :host "d0x-vm"}}
+
+ :dependencies
+ [[binaryage/devtools "1.0.3"]
+  [re-frisk "1.5.1"]
+  [cljsjs/react "17.0.2-0"]
+  [re-frame "1.2.0"]
+  [reagent "1.1.0"]
+  [mount "0.1.16"]]
+
+ :builds
+ {:dev-ui {:target :browser
+           ; :modules {:main {:init-fn bubu.core/init}}
+           ; :main bubu.core
+           :modules {:main {:init-fn starter.ui.core/init}}
+           :main d0x-starter.ui.core
+           :output-dir "public/js"
+           :js-options {:js-package-dirs ["libs/ui/node_modules"]}
+           :optimizations :none
+           :source-map true
+           :compiler-options {:warnings-as-errors true}
+           :preloads [devtools.preload
+                      re-frisk.preload]
+           :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true
+                             goog.DEBUG true}}}}
