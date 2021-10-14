@@ -9,3 +9,12 @@
 (re/reg-sub
   :value-in-wei
   (fn [db _query-v] (eth->wei (get-in db [:transfer-form :amount]))))
+
+; async-experiment START
+(re/reg-sub
+  :async-experiment-result
+  (fn [db _]
+    (println "Producing async-experiment-result" (get-in db [:async-experiment :result]))
+    (get-in db [:async-experiment :result])))
+
+; async-experiment END
