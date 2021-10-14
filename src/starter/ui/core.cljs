@@ -4,7 +4,9 @@
     [mount.core :as mount]
     [re-frame.core :as re]
 
-    [starter.ui.views]))
+    [starter.ui.views]
+    [starter.ui.events]
+    [starter.ui.subs]))
 
 (enable-console-print!)
 

@@ -18,7 +18,7 @@
            :modules {:main {:init-fn starter.ui.core/init}}
            :main d0x-starter.ui.core
            :output-dir "public/js"
-           :js-options {:js-package-dirs ["libs/ui/node_modules"]}
+           :js-options {:js-package-dirs ["libs/ui/node_modules" "node_modules"]}
            :optimizations :none
            :source-map true
            :compiler-options {:warnings-as-errors true}
