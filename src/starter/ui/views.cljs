@@ -1,16 +1,21 @@
 (ns starter.ui.views
   (:require
-    [re-frame.core :as re]))
+    [re-frame.core :as re]
+    [cljs.core.async :as async :refer [chan take!]]
+    [cljs.core.async.interop :refer [p->c]]))
 
 (defn dispatch-value [re-frame-event-name js-event-data]
   (let [value-from-event (-> js-event-data .-target .-value)]
     (re/dispatch [re-frame-event-name value-from-event])))
 
-(defn c-button [text event-name & {:keys [type] :or {type :primary}}]
-  [:button {:class [:is-block :button (str "is-" (name type)) :mt-4]
-            :on-click (fn [e]
-              (.preventDefault e)
-              (re/dispatch [event-name]))} text])
+(defn c-button [text action & {:keys [type] :or {type :primary}}]
+  (let [emit-event #(re/dispatch [action])
+        on-click-fn (if (fn? action) action emit-event)]
+    [:button {:class [:is-block :button (str "is-" (name type)) :mt-4]
+              :on-click (fn [e]
+                          (.preventDefault e)
+                          (on-click-fn))} text]))
+
 
 (defn async-experiment []
   (let [promise-result (re/subscribe [:async-experiment-result])]
@@ -24,7 +29,9 @@
       [:div.column
        [:article
         [:div.message-header "Promise result"]
-        [:div.message-body (or @promise-result "<nothing>")]]]]]))
+        [:div.message-body
+         [:div (str "promise-result: " @promise-result)]
+         ]]]]]))
 
 (defn transfer-form []
   (let [wei-value (re/subscribe [:value-in-wei])]
@@ -37,8 +44,9 @@
      [:input {:type "text" :class [:input] :style {:width "40%"} :value @wei-value :disabled true}]
      [c-button "Send!" :transfer-form/send]]))
 
+(def sections [transfer-form async-experiment])
+
 (defn starter-app []
   [:<>
    [:h1 {:class :title} "Web3 starter"]
-   [transfer-form]
-   [async-experiment]])
+   (into [:div] (map vector sections))])

@@ -1,6 +1,8 @@
 {:source-paths
  ["src"]
 
+ :nrepl {:port 30333}
+
  :dev-http {6500 {:root "public" :host "d0x-vm"}}
 
  :dependencies
